@@ -1,0 +1,59 @@
+import React, { useState, useEffect } from 'react';
+import TaskForm from './TaskForm';
+import TaskList from './TaskList';
+import './TaskDashboard.css';
+
+const API_URL = 'http://localhost:8080/tasks';
+
+export default function TaskDashboard() {
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchTasks = async () => {
+        try {
+            const res = await fetch(API_URL);
+            if (res.ok) {
+                const data = await res.json();
+                setTasks(data);
+            }
+        } catch (err) {
+            console.error("Failed to fetch tasks", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const createTask = async (title) => {
+        if (!title.trim()) return;
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title })
+            });
+            if (res.ok) {
+                await fetchTasks();
+            }
+        } catch (err) {
+            console.error("Failed to create task", err);
+        }
+    };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+    return (
+        <div className="dashboard-container">
+            <header className="dashboard-header">
+                <h1>Second Brain</h1>
+                <p className="subtitle">Capture everything. Process later.</p>
+            </header>
+
+            <main className="dashboard-content">
+                <TaskForm onSubmit={createTask} />
+                {loading ? <div className="loader">Loading...</div> : <TaskList tasks={tasks} />}
+            </main>
+        </div>
+    );
+}

@@ -1,0 +1,37 @@
+# OS junk
+.DS_Store
+.Thumbnails
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Backend (Java/Spring)
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/help.md
+*.class
+*.log
+*.jar
+
+# Persistence Data (Don't commit user data)
+backend/data/*.jsonl
+
+# Frontend (Node/React)
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.stryker-tmp/
+frontend/.eslintcache
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
