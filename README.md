@@ -5,7 +5,7 @@ A personal "Second Brain" task manager application built with a Java Spring Boot
 ## Features
 - **Backend**: Spring Boot 3 (Java 17) with REST API.
 - **Frontend**: React + Vite with premium Dark Mode UI.
-- **Persistence**: File-based Append-only Log (No database required).
+- **Persistence**: In-Memory Storage (Tasks lost on restart).
 - **Core Functionality**:
     - Manage Tasks (Create, List, Status Updates).
     - Connectivity Health Check (`/health`).

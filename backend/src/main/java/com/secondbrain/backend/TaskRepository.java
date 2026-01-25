@@ -1,6 +1,5 @@
 package com.secondbrain.backend;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -9,17 +8,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Repository
 public class TaskRepository {
-    private final FilePersistenceService persistenceService;
+    // In-memory storage only (per Feature 2 requirements)
     private final List<Task> tasks = new CopyOnWriteArrayList<>();
-
-    public TaskRepository(FilePersistenceService persistenceService) {
-        this.persistenceService = persistenceService;
-    }
-
-    @PostConstruct
-    public void init() {
-        tasks.addAll(persistenceService.loadAll());
-    }
 
     public List<Task> findAll() {
         return new ArrayList<>(tasks);
@@ -27,7 +17,6 @@ public class TaskRepository {
 
     public Task save(Task task) {
         tasks.add(task);
-        persistenceService.append(task);
         return task;
     }
 }
