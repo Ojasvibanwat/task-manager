@@ -57,5 +57,9 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
     └── vite.config.js  # Vite Configuration
 ```
 
-## License
-MIT
+
+## Changelog
+- **Feature 1**: Application Skeleton & Health Check.
+- **Feature 2**: In-Memory Task Creation.
+- **Feature 3**: List All Tasks (Live Updates).
+
