@@ -9,6 +9,7 @@ public class Task {
     private String id;
     private String title;
     private String category;
+    private List<String> tags;
     private String status; // "TODO", "DONE"
     private LocalDateTime createdAt;
 
@@ -17,6 +18,7 @@ public class Task {
         this.createdAt = LocalDateTime.now();
         this.status = "TODO";
         this.category = "Inbox";
+        this.tags = new ArrayList<>();
     }
 
     public Task(String title) {
@@ -47,6 +49,14 @@ public class Task {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public String getStatus() {

@@ -27,13 +27,13 @@ export default function TaskDashboard() {
         }
     };
 
-    const createTask = async (title, category) => {
+    const createTask = async (title, category, tags) => {
         if (!title.trim()) return;
         try {
             const res = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, category })
+                body: JSON.stringify({ title, category, tags })
             });
             if (res.ok) {
                 await fetchTasks();

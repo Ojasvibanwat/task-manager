@@ -12,6 +12,9 @@ export default function TaskList({ tasks }) {
                     <div className="task-content">
                         <span className="task-status status-todo">{task.status}</span>
                         {task.category && <span className="task-category">{task.category}</span>}
+                        {task.tags && task.tags.map((tag, i) => (
+                            <span key={i} className="task-tag">#{tag}</span>
+                        ))}
                         <span className="task-title">{task.title}</span>
                     </div>
                     <span className="task-time">

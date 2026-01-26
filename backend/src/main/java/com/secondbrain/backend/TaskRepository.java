@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -13,6 +15,7 @@ public class TaskRepository {
     private final FilePersistenceService persistenceService;
     private final List<Task> tasks = new CopyOnWriteArrayList<>();
     private final Map<String, List<Task>> categoryIndex = new ConcurrentHashMap<>();
+    private final Map<String, Set<String>> tagIndex = new ConcurrentHashMap<>();
 
     public TaskRepository(FilePersistenceService persistenceService) {
         this.persistenceService = persistenceService;
@@ -28,6 +31,12 @@ public class TaskRepository {
     private void addToIndex(Task task) {
         String cat = task.getCategory() == null ? "Inbox" : task.getCategory();
         categoryIndex.computeIfAbsent(cat, k -> new CopyOnWriteArrayList<>()).add(task);
+
+        if (task.getTags() != null) {
+            for (String tag : task.getTags()) {
+                tagIndex.computeIfAbsent(tag, k -> new HashSet<>()).add(task.getId());
+            }
+        }
     }
 
     public List<Task> findAll() {
