@@ -8,8 +8,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Repository
 public class TaskRepository {
-    // In-memory storage only (per Feature 2 requirements)
+    private final FilePersistenceService persistenceService;
     private final List<Task> tasks = new CopyOnWriteArrayList<>();
+
+    public TaskRepository(FilePersistenceService persistenceService) {
+        this.persistenceService = persistenceService;
+    }
+
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        tasks.addAll(persistenceService.loadAll());
+    }
 
     public List<Task> findAll() {
         return new ArrayList<>(tasks);
@@ -17,6 +26,7 @@ public class TaskRepository {
 
     public Task save(Task task) {
         tasks.add(task);
+        persistenceService.append(task);
         return task;
     }
 }
