@@ -14,7 +14,15 @@ export default function TaskDashboard() {
             let url = API_URL;
             const params = new URLSearchParams();
             if (categoryFilter) params.append('category', categoryFilter);
-            if (tagFilter) params.append('tag', tagFilter);
+
+            if (tagFilter) {
+                const tags = tagFilter.split(',').map(t => t.trim()).filter(t => t.length > 0);
+                if (tags.length > 1) {
+                    params.append('tags', tags.join(',')); // Spring Boot can handle comma-separated list
+                } else if (tags.length === 1) {
+                    params.append('tag', tags[0]);
+                }
+            }
 
             if (Array.from(params).length > 0) {
                 url += `?${params.toString()}`;
@@ -70,7 +78,7 @@ export default function TaskDashboard() {
                     ))}
                     <input
                         type="text"
-                        placeholder="Filter by tag..."
+                        placeholder="Filter by tag(s)..."
                         className="tag-filter-input"
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') fetchTasks(null, e.target.value);

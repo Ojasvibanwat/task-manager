@@ -64,4 +64,22 @@ public class TaskRepository {
         }
         return result;
     }
+
+    public List<Task> findByTags(List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Set<String> resultIds = new HashSet<>(tagIndex.getOrDefault(tags.get(0), new HashSet<>()));
+        for (int i = 1; i < tags.size(); i++) {
+            resultIds.retainAll(tagIndex.getOrDefault(tags.get(i), new HashSet<>()));
+        }
+
+        List<Task> result = new ArrayList<>();
+        for (Task t : tasks) {
+            if (resultIds.contains(t.getId())) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
 }

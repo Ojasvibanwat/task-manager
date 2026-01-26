@@ -66,4 +66,5 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 - **Feature 5**: Categories (Creation + Filtering).
 - **Feature 6**: Tags (Multiple tags per task).
 - **Feature 7**: Single-Tag Filtering.
+- **Feature 8**: Multi-Tag AND Queries.
 

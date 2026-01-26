@@ -21,9 +21,13 @@ public class TaskController {
 
     @GetMapping
     public List<Task> getAllTasks(@RequestParam(required = false) String category,
-            @RequestParam(required = false) String tag) {
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) List<String> tags) {
         if (category != null && !category.isEmpty()) {
             return repository.findByCategory(category);
+        }
+        if (tags != null && !tags.isEmpty()) {
+            return repository.findByTags(tags);
         }
         if (tag != null && !tag.isEmpty()) {
             return repository.findByTag(tag);
