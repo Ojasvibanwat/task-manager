@@ -63,4 +63,5 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 - **Feature 2**: In-Memory Task Creation.
 - **Feature 3**: List All Tasks (Live Updates).
 - **Feature 4**: File-Based Persistence.
+- **Feature 5**: Categories (Creation + Filtering).
 

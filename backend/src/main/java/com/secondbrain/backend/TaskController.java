@@ -1,6 +1,11 @@
 package com.secondbrain.backend;
 
 import org.springframework.web.bind.annotation.*;
+// import org.springframework.web.bind.annotation.RequestParam; // Already included in .* but good to be explicit or just leave it since .* covers it.
+// Actually imports are: import org.springframework.web.bind.annotation.*;
+// So RequestParam is covered. I will skip this edit if it's already covered by glob.
+// Wait, `import org.springframework.web.bind.annotation.*;` is line 3.
+// So I don't need to add it.
 
 import java.util.List;
 
@@ -15,7 +20,10 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
+    public List<Task> getAllTasks(@RequestParam(required = false) String category) {
+        if (category != null && !category.isEmpty()) {
+            return repository.findByCategory(category);
+        }
         return repository.findAll();
     }
 

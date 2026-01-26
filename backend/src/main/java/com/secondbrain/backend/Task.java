@@ -8,6 +8,7 @@ import java.util.UUID;
 public class Task {
     private String id;
     private String title;
+    private String category;
     private String status; // "TODO", "DONE"
     private LocalDateTime createdAt;
 
@@ -15,6 +16,7 @@ public class Task {
         this.id = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
         this.status = "TODO";
+        this.category = "Inbox";
     }
 
     public Task(String title) {
@@ -37,6 +39,14 @@ public class Task {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getStatus() {

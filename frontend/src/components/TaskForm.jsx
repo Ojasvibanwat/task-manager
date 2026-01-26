@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 
 export default function TaskForm({ onSubmit }) {
     const [title, setTitle] = useState('');
+    const [category, setCategory] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(title);
+        onSubmit(title, category || 'Inbox');
         setTitle('');
+        setCategory('');
     };
 
     return (
@@ -18,6 +20,13 @@ export default function TaskForm({ onSubmit }) {
                 placeholder="What's on your mind?..."
                 autoFocus
                 className="task-input"
+            />
+            <input
+                type="text"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Category (optional)"
+                className="category-input"
             />
             <button type="submit" className="task-add-btn">
                 Add Note
