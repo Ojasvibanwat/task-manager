@@ -9,12 +9,17 @@ export default function TaskDashboard() {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchTasks = async (categoryFilter = null) => {
+    const fetchTasks = async (categoryFilter = null, tagFilter = null) => {
         try {
             let url = API_URL;
-            if (categoryFilter) {
-                url += `?category=${encodeURIComponent(categoryFilter)}`;
+            const params = new URLSearchParams();
+            if (categoryFilter) params.append('category', categoryFilter);
+            if (tagFilter) params.append('tag', tagFilter);
+
+            if (Array.from(params).length > 0) {
+                url += `?${params.toString()}`;
             }
+
             const res = await fetch(url);
             if (res.ok) {
                 const data = await res.json();
@@ -59,10 +64,18 @@ export default function TaskDashboard() {
 
             <main className="dashboard-content">
                 <div className="filter-bar">
-                    <button onClick={() => fetchTasks(null)}>All</button>
+                    <button onClick={() => fetchTasks(null, null)}>All</button>
                     {categories.map(cat => (
-                        <button key={cat} onClick={() => fetchTasks(cat)}>{cat}</button>
+                        <button key={cat} onClick={() => fetchTasks(cat, null)}>{cat}</button>
                     ))}
+                    <input
+                        type="text"
+                        placeholder="Filter by tag..."
+                        className="tag-filter-input"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') fetchTasks(null, e.target.value);
+                        }}
+                    />
                 </div>
                 <TaskForm onSubmit={createTask} />
                 {loading ? <div className="loader">Loading...</div> : <TaskList tasks={tasks} />}

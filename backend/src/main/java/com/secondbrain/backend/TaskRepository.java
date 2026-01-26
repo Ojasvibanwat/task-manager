@@ -53,4 +53,15 @@ public class TaskRepository {
     public List<Task> findByCategory(String category) {
         return new ArrayList<>(categoryIndex.getOrDefault(category, new ArrayList<>()));
     }
+
+    public List<Task> findByTag(String tag) {
+        Set<String> ids = tagIndex.getOrDefault(tag, new HashSet<>());
+        List<Task> result = new ArrayList<>();
+        for (Task t : tasks) {
+            if (ids.contains(t.getId())) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
 }

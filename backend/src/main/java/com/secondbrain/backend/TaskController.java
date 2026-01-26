@@ -20,9 +20,13 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks(@RequestParam(required = false) String category) {
+    public List<Task> getAllTasks(@RequestParam(required = false) String category,
+            @RequestParam(required = false) String tag) {
         if (category != null && !category.isEmpty()) {
             return repository.findByCategory(category);
+        }
+        if (tag != null && !tag.isEmpty()) {
+            return repository.findByTag(tag);
         }
         return repository.findAll();
     }
