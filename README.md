@@ -1,6 +1,6 @@
-# Second Brain Task Manager
+# Task Management
 
-A personal "Second Brain" task manager application built with a Java Spring Boot backend and React (Vite) frontend. Capture thoughts, organize with categories and tags, and track completion status.
+A personal task management application built with a Java Spring Boot backend and React (Vite) frontend. Capture thoughts, organize with categories and tags, and track completion status.
 
 ## ✨ Features
 

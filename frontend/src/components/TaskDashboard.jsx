@@ -98,8 +98,8 @@ export default function TaskDashboard() {
     return (
         <div className="dashboard-container">
             <header className="dashboard-header">
-                <h1>Second Brain</h1>
-                <p className="subtitle">Capture everything. Process later.</p>
+                <h1>Task Management</h1>
+                <p className="subtitle">Organize. Prioritize. Achieve.</p>
             </header>
 
             <main className="dashboard-content">
