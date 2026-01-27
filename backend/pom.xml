@@ -13,7 +13,7 @@
     <artifactId>backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>backend</name>
-    <description>Task Management Backend</description>
+    <description>Task Manager Backend</description>
     <properties>
         <java.version>17</java.version>
     </properties>

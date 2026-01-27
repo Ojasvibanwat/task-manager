@@ -98,7 +98,7 @@ export default function TaskDashboard() {
     return (
         <div className="dashboard-container">
             <header className="dashboard-header">
-                <h1>Task Management</h1>
+                <h1>Task Manager</h1>
                 <p className="subtitle">Organize. Prioritize. Achieve.</p>
             </header>
 
