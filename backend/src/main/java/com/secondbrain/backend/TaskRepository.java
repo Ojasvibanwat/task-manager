@@ -24,8 +24,24 @@ public class TaskRepository {
     @jakarta.annotation.PostConstruct
     public void init() {
         List<Task> loadedTasks = persistenceService.loadAll();
-        tasks.addAll(loadedTasks);
-        loadedTasks.forEach(this::addToIndex);
+        // Dedup tasks by ID, keeping the latest version (Log-structured)
+        Map<String, Task> taskMap = new java.util.LinkedHashMap<>();
+        for (Task t : loadedTasks) {
+            taskMap.put(t.getId(), t);
+        }
+        tasks.addAll(taskMap.values());
+        tasks.forEach(this::addToIndex);
+    }
+
+    public Task updateStatus(String id, String status) {
+        for (Task t : tasks) {
+            if (t.getId().equals(id)) {
+                t.setStatus(status);
+                persistenceService.append(t); // Append new state to log
+                return t;
+            }
+        }
+        return null;
     }
 
     private void addToIndex(Task task) {

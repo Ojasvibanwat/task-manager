@@ -23,7 +23,10 @@ public class TaskController {
     @GetMapping
     public List<Task> getAllTasks(@RequestParam(required = false) String category,
             @RequestParam(required = false) String tag,
-            @RequestParam(required = false) List<String> tags) {
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false) String status) {
+
+        List<Task> result;
         // Normalize tags
         List<String> searchTags = new ArrayList<>();
         if (tags != null) {
@@ -34,15 +37,27 @@ public class TaskController {
         }
 
         if (category != null && !category.isEmpty() && !searchTags.isEmpty()) {
-            return repository.findByCategoryAndTags(category, searchTags);
+            result = repository.findByCategoryAndTags(category, searchTags);
+        } else if (category != null && !category.isEmpty()) {
+            result = repository.findByCategory(category);
+        } else if (!searchTags.isEmpty()) {
+            result = repository.findByTags(searchTags);
+        } else {
+            result = repository.findAll();
         }
-        if (category != null && !category.isEmpty()) {
-            return repository.findByCategory(category);
+
+        // Apply Status Filter
+        if (status != null && !status.isEmpty()) {
+            List<Task> filtered = new ArrayList<>();
+            for (Task t : result) {
+                if (status.equalsIgnoreCase(t.getStatus())) {
+                    filtered.add(t);
+                }
+            }
+            return filtered;
         }
-        if (!searchTags.isEmpty()) {
-            return repository.findByTags(searchTags);
-        }
-        return repository.findAll();
+
+        return result;
     }
 
     @PostMapping
@@ -53,8 +68,14 @@ public class TaskController {
         if (task.getCreatedAt() == null)
             task.setCreatedAt(java.time.LocalDateTime.now());
         if (task.getStatus() == null)
-            task.setStatus("TODO");
+            task.setStatus("OPEN");
 
         return repository.save(task);
+    }
+
+    @PutMapping("/{id}/status")
+    public Task updateStatus(@PathVariable String id, @RequestBody java.util.Map<String, String> payload) {
+        String status = payload.get("status");
+        return repository.updateStatus(id, status);
     }
 }

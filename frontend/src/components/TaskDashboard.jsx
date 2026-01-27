@@ -9,11 +9,12 @@ export default function TaskDashboard() {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const fetchTasks = async (categoryFilter = null, tagFilter = null) => {
+    const fetchTasks = async (categoryFilter = null, tagFilter = null, statusFilter = null) => {
         try {
             let url = API_URL;
             const params = new URLSearchParams();
             if (categoryFilter) params.append('category', categoryFilter);
+            if (statusFilter && statusFilter !== 'ALL') params.append('status', statusFilter);
 
             if (tagFilter) {
                 const tags = tagFilter.split(',').map(t => t.trim()).filter(t => t.length > 0);
@@ -56,12 +57,43 @@ export default function TaskDashboard() {
         }
     };
 
+    const toggleStatus = async (id, currentStatus) => {
+        const newStatus = currentStatus === 'DONE' ? 'OPEN' : 'DONE';
+        try {
+            const res = await fetch(`${API_URL}/${id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+            if (res.ok) {
+                // Optimistic update or refetch
+                setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
+            }
+        } catch (err) {
+            console.error("Failed to update status", err);
+        }
+    };
+
     useEffect(() => {
-        fetchTasks();
+        fetchTasks(null, null, 'ALL');
     }, []);
 
-    const categories = ["Inbox", "Work", "Personal", "Home"]; // Hardcoded for now or derive dynamically
+    const categories = ["Inbox", "Work", "Personal", "Home"];
+    const statuses = ["ALL", "OPEN", "DONE"];
+    const [currentStatus, setCurrentStatus] = useState("ALL");
+    const [currentCategory, setCurrentCategory] = useState(null);
+    const [currentTag, setCurrentTag] = useState(null);
 
+    const handleCategoryClick = (cat) => {
+        const newCat = currentCategory === cat ? null : cat;
+        setCurrentCategory(newCat);
+        fetchTasks(newCat, currentTag, currentStatus);
+    };
+
+    const handleStatusClick = (stat) => {
+        setCurrentStatus(stat);
+        fetchTasks(currentCategory, currentTag, stat);
+    };
 
     return (
         <div className="dashboard-container">
@@ -72,21 +104,43 @@ export default function TaskDashboard() {
 
             <main className="dashboard-content">
                 <div className="filter-bar">
-                    <button onClick={() => fetchTasks(null, null)}>All</button>
-                    {categories.map(cat => (
-                        <button key={cat} onClick={() => fetchTasks(cat, null)}>{cat}</button>
-                    ))}
+                    <div className="filter-group">
+                        {statuses.map(stat => (
+                            <button
+                                key={stat}
+                                onClick={() => handleStatusClick(stat)}
+                                className={currentStatus === stat ? 'active' : ''}
+                            >
+                                {stat}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="divider"></div>
+                    <div className="filter-group">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => handleCategoryClick(cat)}
+                                className={currentCategory === cat ? 'active' : ''}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
                     <input
                         type="text"
                         placeholder="Filter by tag(s)..."
                         className="tag-filter-input"
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') fetchTasks(null, e.target.value);
+                            if (e.key === 'Enter') {
+                                setCurrentTag(e.target.value);
+                                fetchTasks(currentCategory, e.target.value, currentStatus);
+                            }
                         }}
                     />
                 </div>
                 <TaskForm onSubmit={createTask} />
-                {loading ? <div className="loader">Loading...</div> : <TaskList tasks={tasks} />}
+                {loading ? <div className="loader">Loading...</div> : <TaskList tasks={tasks} onToggle={toggleStatus} />}
             </main>
         </div>
     );

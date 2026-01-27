@@ -16,7 +16,7 @@ public class Task {
     public Task() {
         this.id = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now();
-        this.status = "TODO";
+        this.status = "OPEN";
         this.category = "Inbox";
         this.tags = new ArrayList<>();
     }

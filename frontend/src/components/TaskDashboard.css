@@ -15,6 +15,7 @@
     margin: 0;
     background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -1px;
 }
@@ -125,42 +126,64 @@
     color: var(--text-muted);
     padding: 2rem;
 }
+
 /* Categories */
 .category-input {
-  flex: 1;
-  padding: 1rem;
-  border: none;
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
-  font-size: 1rem;
-  outline: none;
-  font-family: inherit;
-  margin-left: 1px; /* Divider look */
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    font-family: inherit;
+    margin-left: 1px;
+    /* Divider look */
 }
 
 .filter-bar {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  overflow-x: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    overflow-x: auto;
+}
+
+.filter-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .filter-bar button {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.7);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-size: 0.9rem;
 }
 
 .filter-bar button:hover {
-  background: rgba(255,255,255,0.1);
-  color: white;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.filter-bar button.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 0 10px rgba(124, 77, 255, 0.4);
 }
 
 .task-category {
@@ -192,4 +215,22 @@
     outline: none;
     width: 150px;
     font-size: 0.9rem;
+}
+
+.task-checkbox {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-right: 0.5rem;
+    accent-color: var(--accent-color);
+    cursor: pointer;
+}
+
+.task-item.completed {
+    opacity: 0.6;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.task-item.completed .task-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
 }
