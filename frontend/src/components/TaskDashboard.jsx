@@ -3,7 +3,7 @@ import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import './TaskDashboard.css';
 
-const API_URL = 'http://localhost:8080/tasks';
+const API_URL = 'http://127.0.0.1:8080/tasks';
 
 export default function TaskDashboard() {
     const [tasks, setTasks] = useState([]);

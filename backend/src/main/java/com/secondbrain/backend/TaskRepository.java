@@ -82,4 +82,37 @@ public class TaskRepository {
         }
         return result;
     }
+
+    public List<Task> findByCategoryAndTags(String category, List<String> tags) {
+        if (category == null || category.isEmpty()) {
+            return findByTags(tags);
+        }
+        if (tags == null || tags.isEmpty()) {
+            return findByCategory(category);
+        }
+
+        // Get category IDs
+        List<Task> categoryTasks = categoryIndex.getOrDefault(category, new ArrayList<>());
+        Set<String> categoryIds = new HashSet<>();
+        for (Task t : categoryTasks) {
+            categoryIds.add(t.getId());
+        }
+
+        // Get tag intersection IDs
+        Set<String> tagIds = new HashSet<>(tagIndex.getOrDefault(tags.get(0), new HashSet<>()));
+        for (int i = 1; i < tags.size(); i++) {
+            tagIds.retainAll(tagIndex.getOrDefault(tags.get(i), new HashSet<>()));
+        }
+
+        // Intersect both
+        tagIds.retainAll(categoryIds);
+
+        List<Task> result = new ArrayList<>();
+        for (Task t : tasks) {
+            if (tagIds.contains(t.getId())) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
 }

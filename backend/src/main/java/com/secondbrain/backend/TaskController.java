@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 // Wait, `import org.springframework.web.bind.annotation.*;` is line 3.
 // So I don't need to add it.
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,14 +24,23 @@ public class TaskController {
     public List<Task> getAllTasks(@RequestParam(required = false) String category,
             @RequestParam(required = false) String tag,
             @RequestParam(required = false) List<String> tags) {
+        // Normalize tags
+        List<String> searchTags = new ArrayList<>();
+        if (tags != null) {
+            searchTags.addAll(tags);
+        }
+        if (tag != null && !tag.isEmpty()) {
+            searchTags.add(tag);
+        }
+
+        if (category != null && !category.isEmpty() && !searchTags.isEmpty()) {
+            return repository.findByCategoryAndTags(category, searchTags);
+        }
         if (category != null && !category.isEmpty()) {
             return repository.findByCategory(category);
         }
-        if (tags != null && !tags.isEmpty()) {
-            return repository.findByTags(tags);
-        }
-        if (tag != null && !tag.isEmpty()) {
-            return repository.findByTag(tag);
+        if (!searchTags.isEmpty()) {
+            return repository.findByTags(searchTags);
         }
         return repository.findAll();
     }
