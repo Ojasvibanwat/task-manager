@@ -131,4 +131,8 @@ public class TaskRepository {
         }
         return result;
     }
+
+    public List<String> getAllCategories() {
+        return new ArrayList<>(categoryIndex.keySet());
+    }
 }

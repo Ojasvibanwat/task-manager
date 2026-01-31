@@ -78,4 +78,9 @@ public class TaskController {
         String status = payload.get("status");
         return repository.updateStatus(id, status);
     }
+
+    @GetMapping("/categories")
+    public List<String> getCategories() {
+        return repository.getAllCategories();
+    }
 }

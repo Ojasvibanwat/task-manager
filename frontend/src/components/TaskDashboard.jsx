@@ -76,17 +76,24 @@ export default function TaskDashboard() {
 
     useEffect(() => {
         fetchTasks(null, null, 'ALL');
+        // Fetch categories
+        fetch(`${API_URL}/categories`)
+            .then(res => res.json())
+            .then(data => setCategories(data))
+            .catch(err => console.error("Failed to fetch categories", err));
     }, []);
 
-    const categories = ["Inbox", "Work", "Personal", "Home"];
     const statuses = ["ALL", "OPEN", "DONE"];
     const [currentStatus, setCurrentStatus] = useState("ALL");
-    const [currentCategory, setCurrentCategory] = useState(null);
+    const [currentCategory, setCurrentCategory] = useState("");
     const [currentTag, setCurrentTag] = useState(null);
+    const [categories, setCategories] = useState([]);
 
-    const handleCategoryClick = (cat) => {
-        const newCat = currentCategory === cat ? null : cat;
-        setCurrentCategory(newCat);
+
+
+    const handleCategoryChange = (cat) => {
+        setCurrentCategory(cat);
+        const newCat = cat === "" ? null : cat;
         fetchTasks(newCat, currentTag, currentStatus);
     };
 
@@ -114,17 +121,16 @@ export default function TaskDashboard() {
                         ))}
                     </select>
                     <div className="divider"></div>
-                    <div className="filter-group">
+                    <select
+                        className="category-dropdown"
+                        value={currentCategory}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                    >
+                        <option value="">All Categories</option>
                         {categories.map(cat => (
-                            <button
-                                key={cat}
-                                onClick={() => handleCategoryClick(cat)}
-                                className={currentCategory === cat ? 'active' : ''}
-                            >
-                                {cat}
-                            </button>
+                            <option key={cat} value={cat}>{cat}</option>
                         ))}
-                    </div>
+                    </select>
                     <input
                         type="text"
                         placeholder="Filter by tag(s)..."

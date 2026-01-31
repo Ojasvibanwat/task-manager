@@ -28,6 +28,7 @@ A personal task manager application built with a Java Spring Boot backend and Re
 | **Dark Mode** | Premium dark theme with glassmorphism effects |
 | **Checkbox Toggle** | Click checkbox to mark tasks complete |
 | **Visual Feedback** | Completed tasks show strikethrough styling |
+| **Category Dropdown** | Simple dropdown matching status filter design |
 | **Active Filter Highlight** | Currently selected filters are highlighted |
 
 ---
@@ -155,13 +156,20 @@ Content-Type: application/json
 Response: Updated task
 ```
 
+#### Get Categories
+```
+GET /api/tasks/categories
+
+Response: ["Inbox", "Work", "Personal", "Home", ...]
+```
+
 ---
 
 ## 🎨 UI Guide
 
 ### Filter Bar
 - **Status Dropdown**: Select from `ALL` | `OPEN` | `DONE` to filter by completion status
-- **Category Buttons**: `Inbox` | `Work` | `Personal` | `Home` - Filter by category
+- **Category Dropdown**: Select from dynamically loaded categories (default: "All Categories")
 - **Tag Input**: Type tag(s) and press Enter to filter (comma-separated for AND)
 
 ### Task Item
@@ -189,6 +197,7 @@ Response: Updated task
 | **1.9** | **Task Status (OPEN/DONE) + Status Filtering** |
 | **2.0** | **Status Dropdown Filter + Refined UI Border-Radius** |
 | **2.1** | **API Context Path (/api) + Vite Proxy Configuration** |
+| **2.2** | **Dynamic Category Dropdown + /api/tasks/categories Endpoint** |
 
 ---
 
