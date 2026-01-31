@@ -62,7 +62,7 @@ cd second-brain-task-manager
 cd backend
 mvn spring-boot:run
 ```
-Expected: `Tomcat started on port(s): 8080 (http)`
+Expected: `Tomcat started on port(s): 8080 (http) with context path '/api'`
 
 ### 3. Start the Frontend
 ```bash
@@ -82,13 +82,15 @@ Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
 ```
 .
 ├── backend/                    # Spring Boot Application
-│   ├── src/main/java/
-│   │   └── com/secondbrain/backend/
-│   │       ├── Task.java              # Task model
-│   │       ├── TaskController.java    # REST endpoints
-│   │       ├── TaskRepository.java    # In-memory storage + indexes
-│   │       ├── FilePersistenceService.java  # File I/O
-│   │       └── HealthController.java  # Health check
+│   ├── src/main/
+│   │   ├── java/com/secondbrain/backend/
+│   │   │   ├── Task.java              # Task model
+│   │   │   ├── TaskController.java    # REST endpoints
+│   │   │   ├── TaskRepository.java    # In-memory storage + indexes
+│   │   │   ├── FilePersistenceService.java  # File I/O
+│   │   │   └── HealthController.java  # Health check
+│   │   └── resources/
+│   │       └── application.properties # Server configuration
 │   ├── data/
 │   │   └── tasks.jsonl         # Persistent task storage
 │   └── pom.xml
@@ -102,16 +104,18 @@ Navigate to [http://localhost:5173](http://localhost:5173) in your browser.
     │   │   └── TaskList.jsx         # Task list display
     │   ├── App.jsx
     │   └── index.css            # Global dark theme
-    └── vite.config.js
+    └── vite.config.js           # Vite config with API proxy
 ```
 
 ---
 
 ## 🔌 API Reference
 
+All API endpoints are served with the `/api` context path.
+
 ### Health Check
 ```
-GET /health
+GET /api/health
 Response: { "status": "UP" }
 ```
 
@@ -119,17 +123,17 @@ Response: { "status": "UP" }
 
 #### List Tasks
 ```
-GET /tasks
-GET /tasks?category=Work
-GET /tasks?status=OPEN
-GET /tasks?tag=urgent
-GET /tasks?tags=urgent,important  (AND logic)
-GET /tasks?category=Work&tags=urgent&status=OPEN  (Combined)
+GET /api/tasks
+GET /api/tasks?category=Work
+GET /api/tasks?status=OPEN
+GET /api/tasks?tag=urgent
+GET /api/tasks?tags=urgent,important  (AND logic)
+GET /api/tasks?category=Work&tags=urgent&status=OPEN  (Combined)
 ```
 
 #### Create Task
 ```
-POST /tasks
+POST /api/tasks
 Content-Type: application/json
 
 {
@@ -143,7 +147,7 @@ Response: Created task with id, status="OPEN", createdAt
 
 #### Update Task Status
 ```
-PUT /tasks/{id}/status
+PUT /api/tasks/{id}/status
 Content-Type: application/json
 
 { "status": "DONE" }  // or "OPEN"
@@ -156,7 +160,7 @@ Response: Updated task
 ## 🎨 UI Guide
 
 ### Filter Bar
-- **Status Buttons**: `ALL` | `OPEN` | `DONE` - Filter by completion status
+- **Status Dropdown**: Select from `ALL` | `OPEN` | `DONE` to filter by completion status
 - **Category Buttons**: `Inbox` | `Work` | `Personal` | `Home` - Filter by category
 - **Tag Input**: Type tag(s) and press Enter to filter (comma-separated for AND)
 
@@ -183,6 +187,8 @@ Response: Updated task
 | 1.7 | Multi-Tag AND Queries |
 | 1.8 | Category + Tag Combination |
 | **1.9** | **Task Status (OPEN/DONE) + Status Filtering** |
+| **2.0** | **Status Dropdown Filter + Refined UI Border-Radius** |
+| **2.1** | **API Context Path (/api) + Vite Proxy Configuration** |
 
 ---
 
@@ -197,8 +203,10 @@ Response: Updated task
 - Category Index: `Map<String, List<Task>>`
 - Tag Index: `Map<String, Set<String>>` (tag → task IDs)
 
-### CORS
-- Backend allows requests from `http://localhost:5173`
+### API Configuration
+- Backend context path: `/api`
+- Frontend uses Vite proxy to route `/api` requests to backend
+- All endpoints accessible at `http://localhost:5173/api/*` during development
 
 ---
 

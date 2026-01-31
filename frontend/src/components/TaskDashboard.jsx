@@ -3,7 +3,7 @@ import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import './TaskDashboard.css';
 
-const API_URL = 'http://127.0.0.1:8080/tasks';
+const API_URL = '/api/tasks';
 
 export default function TaskDashboard() {
     const [tasks, setTasks] = useState([]);
@@ -104,17 +104,15 @@ export default function TaskDashboard() {
 
             <main className="dashboard-content">
                 <div className="filter-bar">
-                    <div className="filter-group">
+                    <select
+                        className="status-dropdown"
+                        value={currentStatus}
+                        onChange={(e) => handleStatusClick(e.target.value)}
+                    >
                         {statuses.map(stat => (
-                            <button
-                                key={stat}
-                                onClick={() => handleStatusClick(stat)}
-                                className={currentStatus === stat ? 'active' : ''}
-                            >
-                                {stat}
-                            </button>
+                            <option key={stat} value={stat}>{stat}</option>
                         ))}
-                    </div>
+                    </select>
                     <div className="divider"></div>
                     <div className="filter-group">
                         {categories.map(cat => (
