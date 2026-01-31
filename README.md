@@ -18,8 +18,8 @@ A personal task manager application built with a Java Spring Boot backend and Re
 | **Categories** | Organize tasks into categories (Inbox, Work, Personal, Home) |
 | **Tags** | Add multiple comma-separated tags to any task |
 | **Status Filter** | Filter by ALL, OPEN, or DONE status |
-| **Category Filter** | Filter tasks by category |
-| **Tag Filter** | Filter by single tag or multiple tags (AND logic) |
+| **Category Filter** | Filter tasks by category via dropdown |
+| **Tag Filter** | Searchable multi-select tag filter with removable chips (AND logic) |
 | **Combined Filters** | Use category + tags + status filters together |
 
 ### UI Features
@@ -29,6 +29,7 @@ A personal task manager application built with a Java Spring Boot backend and Re
 | **Checkbox Toggle** | Click checkbox to mark tasks complete |
 | **Visual Feedback** | Completed tasks show strikethrough styling |
 | **Category Dropdown** | Simple dropdown matching status filter design |
+| **Tag Filter Chips** | Searchable dropdown with removable tag chips |
 | **Active Filter Highlight** | Currently selected filters are highlighted |
 
 ---
@@ -163,6 +164,13 @@ GET /api/tasks/categories
 Response: ["Inbox", "Work", "Personal", "Home", ...]
 ```
 
+#### Get Tags
+```
+GET /api/tasks/tags
+
+Response: ["urgent", "backend", "frontend", "bug", ...]
+```
+
 ---
 
 ## 🎨 UI Guide
@@ -170,7 +178,12 @@ Response: ["Inbox", "Work", "Personal", "Home", ...]
 ### Filter Bar
 - **Status Dropdown**: Select from `ALL` | `OPEN` | `DONE` to filter by completion status
 - **Category Dropdown**: Select from dynamically loaded categories (default: "All Categories")
-- **Tag Input**: Type tag(s) and press Enter to filter (comma-separated for AND)
+- **Tag Filter**: Searchable dropdown with multi-select capability
+  - Click input to see all available tags
+  - Type to search/filter tags in real-time
+  - Click tags to add as removable chips
+  - Click × on chip to remove tag from filter
+  - Multiple tags filter with AND logic (all tags must match)
 
 ### Task Item
 - **Checkbox**: Click to toggle between OPEN and DONE
@@ -198,6 +211,7 @@ Response: ["Inbox", "Work", "Personal", "Home", ...]
 | **2.0** | **Status Dropdown Filter + Refined UI Border-Radius** |
 | **2.1** | **API Context Path (/api) + Vite Proxy Configuration** |
 | **2.2** | **Dynamic Category Dropdown + /api/tasks/categories Endpoint** |
+| **2.3** | **Searchable Multi-Select Tag Filter with Chips + /api/tasks/tags Endpoint** |
 
 ---
 

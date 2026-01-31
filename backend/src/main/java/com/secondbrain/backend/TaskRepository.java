@@ -135,4 +135,10 @@ public class TaskRepository {
     public List<String> getAllCategories() {
         return new ArrayList<>(categoryIndex.keySet());
     }
+
+    public List<String> getAllTags() {
+        List<String> tags = new ArrayList<>(tagIndex.keySet());
+        java.util.Collections.sort(tags);
+        return tags;
+    }
 }

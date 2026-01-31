@@ -81,25 +81,68 @@ export default function TaskDashboard() {
             .then(res => res.json())
             .then(data => setCategories(data))
             .catch(err => console.error("Failed to fetch categories", err));
+        // Fetch tags
+        fetch(`${API_URL}/tags`)
+            .then(res => res.json())
+            .then(data => setAvailableTags(data))
+            .catch(err => console.error("Failed to fetch tags", err));
     }, []);
 
     const statuses = ["ALL", "OPEN", "DONE"];
     const [currentStatus, setCurrentStatus] = useState("ALL");
     const [currentCategory, setCurrentCategory] = useState("");
-    const [currentTag, setCurrentTag] = useState(null);
     const [categories, setCategories] = useState([]);
 
+    // Tag filter state
+    const [availableTags, setAvailableTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [tagSearchQuery, setTagSearchQuery] = useState("");
+    const [showTagSuggestions, setShowTagSuggestions] = useState(false);
 
+
+    // Filter tags based on search query and exclude already selected
+    const filteredTags = tagSearchQuery.trim()
+        ? availableTags.filter(tag =>
+            tag.toLowerCase().includes(tagSearchQuery.toLowerCase()) &&
+            !selectedTags.includes(tag)
+        )
+        : availableTags.filter(tag => !selectedTags.includes(tag));
 
     const handleCategoryChange = (cat) => {
         setCurrentCategory(cat);
         const newCat = cat === "" ? null : cat;
-        fetchTasks(newCat, currentTag, currentStatus);
+        const tagFilter = selectedTags.length > 0 ? selectedTags.join(',') : null;
+        fetchTasks(newCat, tagFilter, currentStatus);
+    };
+
+    const handleTagSelect = (tag) => {
+        if (!selectedTags.includes(tag)) {
+            const newSelectedTags = [...selectedTags, tag];
+            setSelectedTags(newSelectedTags);
+            setTagSearchQuery("");
+            setShowTagSuggestions(false);
+
+            // Update filter
+            const newCat = currentCategory === "" ? null : currentCategory;
+            fetchTasks(newCat, newSelectedTags.join(','), currentStatus);
+        }
+    };
+
+    const handleTagRemove = (tagToRemove) => {
+        const newSelectedTags = selectedTags.filter(t => t !== tagToRemove);
+        setSelectedTags(newSelectedTags);
+
+        // Update filter
+        const newCat = currentCategory === "" ? null : currentCategory;
+        const tagFilter = newSelectedTags.length > 0 ? newSelectedTags.join(',') : null;
+        fetchTasks(newCat, tagFilter, currentStatus);
     };
 
     const handleStatusClick = (stat) => {
         setCurrentStatus(stat);
-        fetchTasks(currentCategory, currentTag, stat);
+        const newCat = currentCategory === "" ? null : currentCategory;
+        const tagFilter = selectedTags.length > 0 ? selectedTags.join(',') : null;
+        fetchTasks(newCat, tagFilter, stat);
     };
 
     return (
@@ -131,17 +174,54 @@ export default function TaskDashboard() {
                             <option key={cat} value={cat}>{cat}</option>
                         ))}
                     </select>
-                    <input
-                        type="text"
-                        placeholder="Filter by tag(s)..."
-                        className="tag-filter-input"
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                setCurrentTag(e.target.value);
-                                fetchTasks(currentCategory, e.target.value, currentStatus);
-                            }
-                        }}
-                    />
+                    <div className="tag-filter-container">
+                        {/* Selected tags chips */}
+                        {selectedTags.length > 0 && (
+                            <div className="selected-tags">
+                                {selectedTags.map(tag => (
+                                    <span key={tag} className="tag-chip">
+                                        {tag}
+                                        <button
+                                            className="tag-chip-remove"
+                                            onClick={() => handleTagRemove(tag)}
+                                            aria-label={`Remove ${tag}`}
+                                        >
+                                            ×
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Tag search input with dropdown */}
+                        <div className="tag-search-container">
+                            <input
+                                type="text"
+                                className="tag-search-input"
+                                placeholder="Search tags..."
+                                value={tagSearchQuery}
+                                onChange={(e) => {
+                                    setTagSearchQuery(e.target.value);
+                                    setShowTagSuggestions(true);
+                                }}
+                                onFocus={() => setShowTagSuggestions(true)}
+                                onBlur={() => setTimeout(() => setShowTagSuggestions(false), 200)}
+                            />
+                            {showTagSuggestions && filteredTags.length > 0 && (
+                                <div className="tag-suggestions">
+                                    {filteredTags.map(tag => (
+                                        <div
+                                            key={tag}
+                                            className="tag-suggestion"
+                                            onClick={() => handleTagSelect(tag)}
+                                        >
+                                            {tag}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <TaskForm onSubmit={createTask} />
                 {loading ? <div className="loader">Loading...</div> : <TaskList tasks={tasks} onToggle={toggleStatus} />}

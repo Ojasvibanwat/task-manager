@@ -83,4 +83,9 @@ public class TaskController {
     public List<String> getCategories() {
         return repository.getAllCategories();
     }
+
+    @GetMapping("/tags")
+    public List<String> getAllTags() {
+        return repository.getAllTags();
+    }
 }
